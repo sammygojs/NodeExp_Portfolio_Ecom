@@ -1,8 +1,9 @@
 // app.js
 const express = require('express');
 const connectDB = require('./config/db');
-// const cookieParser = require('cookie-parser');
-// const authRoutes = require('./routes/authRoutes');
+var cors = require('cors')
+const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -10,11 +11,12 @@ const app = express();
 connectDB();
 
 // Middleware
-// app.use(express.json());
-// app.use(cookieParser());
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors())
 
 // Routes
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

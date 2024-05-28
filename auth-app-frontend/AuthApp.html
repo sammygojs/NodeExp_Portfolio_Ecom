@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth App</title>
+  <script>
+    async function login(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        document.cookie = `token=${data.token}; path=/`;
+        displayUser(data.user);
+      } else {
+        alert(data.message);
+      }
+    }
+
+    async function fetchUserDetails() {
+      const response = await fetch('http://localhost:5000/api/auth/protected');
+      const data = await response.json();
+      if (response.ok) {
+        displayUser(data);
+      } else {
+        alert(data.message);
+      }
+    }
+
+    function displayUser(user) {
+      document.getElementById('user-details').innerText = `Logged in as: ${user.username}`;
+    }
+
+    window.onload = function() {
+      const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+      if (token) {
+        fetchUserDetails();
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Auth App</h1>
+  <form onsubmit="login(event)">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div id="user-details"></div>
+</body>
+</html>
