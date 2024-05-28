@@ -22,7 +22,15 @@ const login = async (req, res) => {
     }
     const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
     res.cookie('token', token, { httpOnly: true });
-    res.json({ message: 'Logged in successfully' });
+    res.json({ 
+      message: 'Logged in successfully',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        // add more user details if needed
+      }
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
