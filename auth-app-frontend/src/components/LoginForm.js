@@ -1,11 +1,13 @@
 // src/components/LoginForm.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -14,6 +16,7 @@ const LoginForm = ({ setUser }) => {
       document.cookie = `token=${response.data.token}; path=/`;
       setUser(response.data.user);
       setMessage(response.data.message);
+      navigate('/user');
     } catch (error) {
       setMessage(error.response.data.message);
     }
@@ -36,7 +39,7 @@ const LoginForm = ({ setUser }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-        />
+        /><br/>
         <button type="submit">Login</button>
       </form>
       <p>{message}</p>
